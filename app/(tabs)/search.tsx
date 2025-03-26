@@ -7,6 +7,7 @@ import MovieCard from "@/components/MovieCard";
 import { icons } from "@/constants/icons";
 import SearchBar from "@/components/SearchBar";
 import { useEffect, useState } from "react";
+import { updateSearchCount } from "@/services/appwrite";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,7 +29,12 @@ const Search = () => {
   useEffect(() => {
     const timeoutId = setTimeout (async () => {
       if (searchQuery.trim()) {
-        loadMovies();
+        await loadMovies();
+        // @ts-ignore
+        if(movies?.length > 0 && movies?.[0] ) {
+          await updateSearchCount(searchQuery, movies[0]);
+          
+        }
       } else {
         reset();
       }
