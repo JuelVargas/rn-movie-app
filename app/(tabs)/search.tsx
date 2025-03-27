@@ -27,14 +27,9 @@ const Search = () => {
   );
 
   useEffect(() => {
-    const timeoutId = setTimeout (async () => {
+    const timeoutId = setTimeout(async () => {
       if (searchQuery.trim()) {
         await loadMovies();
-        // @ts-ignore
-        if(movies?.length > 0 && movies?.[0] ) {
-          await updateSearchCount(searchQuery, movies[0]);
-          
-        }
       } else {
         reset();
       }
@@ -42,6 +37,13 @@ const Search = () => {
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
+
+  useEffect(() => {
+    // @ts-ignore
+    if (movies?.length > 0 && movies?.[0]) {
+      updateSearchCount(searchQuery, movies[0]);
+    }
+  }, [movies]);
 
   return (
     <View className="flex-1 bg-primary">
@@ -104,19 +106,14 @@ const Search = () => {
           </>
         }
         ListEmptyComponent={
-
-          !moviesLoading && !moviesError? (
+          !moviesLoading && !moviesError ? (
             <View className="mt-10 px-5">
               <Text className="text-gray-500 text-center">
-                {searchQuery.trim()
-                  ? "No movies found"
-                  : "Search for a movie"}
+                {searchQuery.trim() ? "No movies found" : "Search for a movie"}
               </Text>
             </View>
-          ): null
-
+          ) : null
         }
-      
       />
     </View>
   );
